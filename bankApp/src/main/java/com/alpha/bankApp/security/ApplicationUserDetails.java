@@ -27,11 +27,11 @@ public class ApplicationUserDetails implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		if (user != null) {
-			return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + user.getUserType().name()));
+		if (employee != null) {
+			return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + employee.getRole().name()));
 
 		} else {
-			return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + employee.getRole().name()));
+			return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + user.getUserType().name()));
 
 		}
 	}

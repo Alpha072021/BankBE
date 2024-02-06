@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.alpha.bankApp.dao.BankDao;
 import com.alpha.bankApp.entity.Bank;
+import com.alpha.bankApp.enums.Role;
 import com.alpha.bankApp.exception.BranchNotFoundException;
 import com.alpha.bankApp.repository.BankJpaRepository;
 
@@ -30,7 +31,14 @@ public class BankDaoImpl implements BankDao {
 	public Bank updateBank(String bankId, Bank bank) {
 		var result = repository.findById(bankId);
 		if (result.isPresent()) {
+			Bank existingBank = result.get();
 			bank.setBankId(bankId);
+			bank.setBranches(existingBank.getBranches());
+			if (existingBank.getManagingDirector() != null
+					&& existingBank.getManagingDirector().getRole() == Role.MANAGING_DIRECTOR)
+				bank.setManagingDirector(existingBank.getManagingDirector());
+			else
+				bank.setManagingDirector(null);
 			return repository.save(bank);
 		}
 		return null;

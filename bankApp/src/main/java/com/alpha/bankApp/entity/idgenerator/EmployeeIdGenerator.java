@@ -21,16 +21,43 @@ public class EmployeeIdGenerator implements IdentifierGenerator {
 		String lastEmployeeId = null;
 		String sql = "SELECT * FROM employee ORDER BY date_of_joining DESC LIMIT 1";
 		JdbcConnectionAccess con = session.getJdbcConnectionAccess();
+		Connection connection = null;
+		PreparedStatement pmst = null;
+		ResultSet result = null;
 		try {
-			Connection connection = con.obtainConnection();
-			PreparedStatement pmst = connection.prepareStatement(sql);
-			ResultSet result = pmst.executeQuery();
+			connection = con.obtainConnection();
+			pmst = connection.prepareStatement(sql);
+			result = pmst.executeQuery();
 			if (result.next()) {
 				lastEmployeeId = result.getString(1);
 			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}
+
+		finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					System.err.println(e);
+				}
+			}
+			if (pmst != null) {
+				try {
+					pmst.close();
+				} catch (SQLException e) {
+					System.err.println(e);
+				}
+			}
+			if (result != null) {
+				try {
+					result.close();
+				} catch (SQLException e) {
+					System.err.println(e);
+				}
+			}
 		}
 
 		if (lastEmployeeId != null) {

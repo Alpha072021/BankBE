@@ -3,6 +3,8 @@
  */
 package com.alpha.bankApp.dao.impl;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -25,19 +27,27 @@ public class BankLedgerDaoImpl implements BankLedgerDao {
 
 	@Override
 	public BankLedger updateBankLedger(long bankLedgerId, BankLedger bankLedger) {
-		// TODO Auto-generated method stub
+		if (getBankLedgerById(bankLedgerId) != null) {
+			return jpaRepository.save(bankLedger);
+		}
 		return null;
 	}
 
 	@Override
 	public BankLedger getBankLedgerById(long bankLedgerId) {
-		// TODO Auto-generated method stub
+		Optional<BankLedger> bankLedgerOptional = jpaRepository.findById(bankLedgerId);
+		if (bankLedgerOptional.isPresent()) {
+			return bankLedgerOptional.get();
+		}
 		return null;
 	}
 
 	@Override
 	public boolean deleteBankLedger(long bankLedgerId) {
-		// TODO Auto-generated method stub
+		if (getBankLedgerById(bankLedgerId) != null) {
+			jpaRepository.deleteById(bankLedgerId);
+			return true;
+		}
 		return false;
 	}
 

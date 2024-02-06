@@ -68,6 +68,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
 			// testing
 			// System.out.println("emp is present ");
 			employee.setEmployeeId(employeeId);
+			employee.setPassword(res.get().getPassword());
 			// merge new object
 			return repository.save(employee);
 		}
@@ -103,7 +104,8 @@ public class EmployeeDaoImpl implements EmployeeDao {
 	public int changeRole(String employeeId, Role role) {
 		return repository.changeRole(employeeId, role);
 	}
-	//To Find the Employees Based on there role
+
+	// To Find the Employees Based on there role
 	public List<Employee> getEmployeeByRole(Role role) {
 		return repository.getEmployeeByRole(role);
 	}

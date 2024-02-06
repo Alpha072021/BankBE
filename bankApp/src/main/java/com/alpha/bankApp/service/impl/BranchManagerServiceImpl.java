@@ -97,13 +97,19 @@ public class BranchManagerServiceImpl extends EmployeeServiceImpl implements Bra
 	public ResponseEntity<ResponseStructure<Employee>> getBranchManager(String branchId) {
 		Employee employee = branchManagerDao.getBranchManager(branchId);
 		if (employee != null) {
-			ResponseStructure<Employee> responseStructure = new ResponseStructure<>();
-			responseStructure.setData(employee);
-			responseStructure.setMessage("Found");
-			responseStructure.setStatusCode(HttpStatus.OK.value());
-			return new ResponseEntity<ResponseStructure<Employee>>(responseStructure, HttpStatus.OK);
+			if (employee.getRole().equals(Role.BRANCH_MANAGER)) {
+
+				ResponseStructure<Employee> responseStructure = new ResponseStructure<>();
+				responseStructure.setData(employee);
+				responseStructure.setMessage("Found");
+				responseStructure.setStatusCode(HttpStatus.OK.value());
+				return new ResponseEntity<ResponseStructure<Employee>>(responseStructure, HttpStatus.OK);
+			}
+			throw new EmployeeNotAssingedRoleException(
+					"The position of Branch Manager is currently vacant or unassigned within the employee");
 		}
 		throw new EmployeeNotFoundException("Branch With the Given Id " + branchId + " Not Assigned Branch Manager");
+
 	}
 
 	@Override
@@ -186,13 +192,18 @@ public class BranchManagerServiceImpl extends EmployeeServiceImpl implements Bra
 	public ResponseEntity<ResponseStructure<Employee>> getBranchManagerById(String branchManagerId) {
 		Employee branchManager = branchManagerDao.getEmployeeById(branchManagerId);
 		if (branchManager != null) {
-			ResponseStructure<Employee> responseStructure = new ResponseStructure<>();
-			responseStructure.setData(branchManager);
-			responseStructure.setMessage("Found");
-			responseStructure.setStatusCode(HttpStatus.OK.value());
-			return new ResponseEntity<ResponseStructure<Employee>>(responseStructure, HttpStatus.OK);
+			if (branchManager.getRole().equals(Role.BRANCH_MANAGER)) {
+				ResponseStructure<Employee> responseStructure = new ResponseStructure<>();
+				responseStructure.setData(branchManager);
+				responseStructure.setMessage("Found");
+				responseStructure.setStatusCode(HttpStatus.OK.value());
+				return new ResponseEntity<ResponseStructure<Employee>>(responseStructure, HttpStatus.OK);
+			}
+			throw new EmployeeNotAssingedRoleException(
+					"The position of Branch Manager is currently vacant or unassigned within the employee");
 		}
 		throw new EmployeeNotFoundException("Employee With the Given Id " + branchManagerId + " Not Found");
+
 	}
 
 	@Override
@@ -222,7 +233,7 @@ public class BranchManagerServiceImpl extends EmployeeServiceImpl implements Bra
 		token = token.substring(7);
 		String employeeId = (String) jwtUtils.extractAllClaims(token).get("userId");
 		Employee employee = branchManagerDao.getEmployeeById(employeeId);
-		if (employee != null) {
+		if (employee != null && employee.getRole().equals(Role.BRANCH_MANAGER)) {
 			Branch branch = branchDao.findBranchByBranchManagerId(employee.getEmployeeId());
 			if (branch != null) {
 				ResponseStructure<BranchManagerDto> structure = new ResponseStructure<>();

@@ -25,11 +25,12 @@ public class ApplicationUserDetailsService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
 		User user = userReposistory.findByEmail(userEmail);
 		Employee employee = employeerepository.findByEmail(userEmail);
-		if (user != null) {
+
+		if (employee != null) {
+			return createEmployeeDetails(employee);
+		} else if (user != null) {
 			return createUserDetails(user);
 
-		} else if (employee != null) {
-			return createEmployeeDetails(employee);
 		}
 
 		throw new InvaildCredentials("Wrong email and password" + userEmail);

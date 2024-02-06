@@ -23,6 +23,8 @@ import com.alpha.bankApp.exception.VersionUnauthorizedException;
 import com.alpha.bankApp.service.BranchManagerService;
 import com.alpha.bankApp.util.ResponseStructure;
 
+import io.swagger.v3.oas.annotations.Hidden;
+
 @RestController
 @RequestMapping("api/version/{version}/branchManagers")
 public class BranchManagerController {
@@ -44,6 +46,7 @@ public class BranchManagerController {
 		throw new VersionUnauthorizedException("Not An Authorized Version");
 	}
 
+	@Hidden
 	@PatchMapping("/branchId")
 	public ResponseEntity<ResponseStructure<String>> removeBranchManager(@PathVariable String version,
 			@RequestParam String branchId) {

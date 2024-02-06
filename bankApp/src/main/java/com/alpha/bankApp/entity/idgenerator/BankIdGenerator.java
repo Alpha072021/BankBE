@@ -29,9 +29,11 @@ public class BankIdGenerator implements IdentifierGenerator {
 		String sql = "SELECT * FROM bank ORDER BY bank_created DESC LIMIT 1";
 
 		JdbcConnectionAccess jdbcConnectionAccess = session.getJdbcConnectionAccess();
+		Connection connection = null;
+		ResultSet resultSet = null;
 		try {
-			Connection connection = jdbcConnectionAccess.obtainConnection();
-			ResultSet resultSet = connection.createStatement().executeQuery(sql);
+			connection = jdbcConnectionAccess.obtainConnection();
+			resultSet = connection.createStatement().executeQuery(sql);
 			if (resultSet.next()) {
 				lastId = resultSet.getString("bank_id");
 			} else {
@@ -39,6 +41,21 @@ public class BankIdGenerator implements IdentifierGenerator {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					System.err.println(e);
+				}
+			}
+			if (resultSet != null) {
+				try {
+					resultSet.close();
+				} catch (SQLException e) {
+					System.err.println(e);
+				}
+			}
 		}
 		if (lastId == null) {
 			sufix = "0001";
@@ -54,5 +71,6 @@ public class BankIdGenerator implements IdentifierGenerator {
 				sufix = "" + ++oldNumId;
 		}
 		return prefix + sufix;
+
 	}
 }

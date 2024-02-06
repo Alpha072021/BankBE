@@ -15,9 +15,13 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.alpha.bankApp.util.ResponseStructure;
+
+import jakarta.persistence.NonUniqueResultException;
 
 @RestControllerAdvice
 public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler {
@@ -169,6 +173,55 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 		ResponseStructure<String> responseStructure = new ResponseStructure<>();
 		responseStructure.setData(exception.getMessage());
 		responseStructure.setMessage("Invalid Bank Name");
+		responseStructure.setStatusCode(HttpStatus.BAD_REQUEST.value());
+		return new ResponseEntity<ResponseStructure<String>>(responseStructure, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(BankAccountNotFoundException.class)
+	public ResponseEntity<ResponseStructure<String>> handleBankAccountNotFoundException(
+			BankAccountNotFoundException exception) {
+		ResponseStructure<String> responseStructure = new ResponseStructure<>();
+		responseStructure.setData(exception.getMessage());
+		responseStructure.setMessage("BankAccount you are looking for does not exist.");
+		responseStructure.setStatusCode(HttpStatus.BAD_REQUEST.value());
+		return new ResponseEntity<ResponseStructure<String>>(responseStructure, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(MaxUploadSizeExceededException.class)
+	public ResponseEntity<ResponseStructure<String>> handleMaxUploadSizeExceededException(
+			MaxUploadSizeExceededException exception) {
+		ResponseStructure<String> responseStructure = new ResponseStructure<>();
+		responseStructure.setStatusCode(HttpStatus.BAD_REQUEST.value());
+		responseStructure.setMessage("File Size Exceeded");
+		responseStructure.setData(exception.getRootCause().getMessage());
+		return new ResponseEntity<ResponseStructure<String>>(responseStructure, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(MultipartException.class)
+	public ResponseEntity<ResponseStructure<String>> handleMultipartException(MultipartException exception) {
+		ResponseStructure<String> responseStructure = new ResponseStructure<>();
+		responseStructure.setStatusCode(HttpStatus.BAD_REQUEST.value());
+		responseStructure.setMessage("Current request is not a multipart request");
+		responseStructure.setData(exception.getRootCause().getMessage());
+		return new ResponseEntity<ResponseStructure<String>>(responseStructure, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(NonUniqueResultException.class)
+	public ResponseEntity<ResponseStructure<String>> handleNonUniqueResultException(
+			NonUniqueResultException exception) {
+		ResponseStructure<String> responseStructure = new ResponseStructure<>();
+		responseStructure.setData(exception.getMessage());
+		responseStructure.setMessage("With the Given Info Multiple Data Found");
+		responseStructure.setStatusCode(HttpStatus.BAD_REQUEST.value());
+		return new ResponseEntity<ResponseStructure<String>>(responseStructure, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(UserAccountNotFoundException.class)
+	public ResponseEntity<ResponseStructure<String>> handleUserAccountNotFoundException(
+			UserAccountNotFoundException exception) {
+		ResponseStructure<String> responseStructure = new ResponseStructure<>();
+		responseStructure.setData(exception.getMessage());
+		responseStructure.setMessage("Non-Account Holder");
 		responseStructure.setStatusCode(HttpStatus.BAD_REQUEST.value());
 		return new ResponseEntity<ResponseStructure<String>>(responseStructure, HttpStatus.BAD_REQUEST);
 	}

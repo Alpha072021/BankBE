@@ -151,7 +151,8 @@ public class ManagingDirectorServiceImpl extends EmployeeServiceImpl implements 
 				responseStructure.setData(managinDirector);
 				responseStructure.setStatusCode(HttpStatus.CREATED.value());
 				responseStructure.setMessage("Employee Created As MD and Assigned to an Bank");
-				return new ResponseEntity<ResponseStructure<ManagingDirectorDto>>(responseStructure, HttpStatus.CREATED);
+				return new ResponseEntity<ResponseStructure<ManagingDirectorDto>>(responseStructure,
+						HttpStatus.CREATED);
 			}
 			throw new BankNotAssignedMDException("Bank Not Assigned An ManagingDirector");
 		}
@@ -207,20 +208,24 @@ public class ManagingDirectorServiceImpl extends EmployeeServiceImpl implements 
 		// Get MD Based on the Token
 		token = token.substring(7);
 		String employeeId = (String) jwtUtils.extractAllClaims(token).get("userId");
-		
+
 		Employee employee = directorDao.getEmployeeById(employeeId);
 		if (employee != null) {
-			ManagingDirectorDto managinDirector = null;
-			Bank bank = directorDao.getBankByManaginDirector(employeeId);
-			if (bank != null)
-				managinDirector = util.createManaginDirector(employee, bank);
-			else
-				managinDirector = util.createManaginDirector(employee);
-			ResponseStructure<ManagingDirectorDto> responseStructure = new ResponseStructure<>();
-			responseStructure.setStatusCode(HttpStatus.OK.value());
-			responseStructure.setMessage("Found");
-			responseStructure.setData(managinDirector);
-			return new ResponseEntity<>(responseStructure, HttpStatus.OK);
+			if (employee.getRole().equals(Role.MANAGING_DIRECTOR)) {
+				ManagingDirectorDto managinDirector = null;
+				Bank bank = directorDao.getBankByManaginDirector(employeeId);
+				if (bank != null)
+					managinDirector = util.createManaginDirector(employee, bank);
+				else
+					managinDirector = util.createManaginDirector(employee);
+				ResponseStructure<ManagingDirectorDto> responseStructure = new ResponseStructure<>();
+				responseStructure.setStatusCode(HttpStatus.OK.value());
+				responseStructure.setMessage("Found");
+				responseStructure.setData(managinDirector);
+				return new ResponseEntity<>(responseStructure, HttpStatus.OK);
+			}
+			throw new EmployeeNotAssingedRoleException(
+					"The position of Managing Director is currently vacant or unassigned within the employee");
 		}
 		throw new EmployeeNotFoundException("ManagingDirector With the Given Id " + employeeId + " Not Found");
 	}
@@ -228,7 +233,19 @@ public class ManagingDirectorServiceImpl extends EmployeeServiceImpl implements 
 	@Override
 	public ResponseEntity<ResponseStructure<Employee>> getManagingDirectorById(String managingDirectorId) {
 
-		return super.getEmployeeById(managingDirectorId);
+		Employee employee = employeeDao.getEmployeeById(managingDirectorId);
+		if (employee != null) {
+			if (employee.getRole().equals(Role.MANAGING_DIRECTOR)) {
+				ResponseStructure<Employee> responseStructure = new ResponseStructure<>();
+				responseStructure.setData(employee);
+				responseStructure.setMessage("Found");
+				responseStructure.setStatusCode(HttpStatus.OK.value());
+				return new ResponseEntity<ResponseStructure<Employee>>(responseStructure, HttpStatus.OK);
+			}
+			throw new EmployeeNotAssingedRoleException(
+					"The position of Managing Director is currently vacant or unassigned within the employee");
+		}
+		throw new EmployeeNotFoundException("Employee With the Given Id " + managingDirectorId + " Not Found");
 	}
 
 }

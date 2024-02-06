@@ -6,8 +6,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.alpha.bankApp.dao.EmployeeDao;
 
-import jakarta.transaction.Transactional;
-
 @SpringBootTest
 class BankAppApplicationEmployeePwdChangeTest {
 

@@ -39,6 +39,7 @@ public class Document implements Comparable<Document>, Serializable {
 
 	@Enumerated(EnumType.STRING)
 	private DocumentType type;
+	private String documentNumber;
 	private LocalDateTime creationDateTime;
 
 	private String documentImagePath;
@@ -184,5 +185,13 @@ public class Document implements Comparable<Document>, Serializable {
 	public int compareTo(Document o) {
 		// TODO Auto-generated method stub
 		return this.hashCode() - o.hashCode();
+	}
+
+	public String getDocumentNumber() {
+		return documentNumber;
+	}
+
+	public void setDocumentNumber(String documentNumber) {
+		this.documentNumber = documentNumber;
 	}
 }

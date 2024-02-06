@@ -18,7 +18,24 @@ public class Address implements Comparable<Address>, Serializable {
 	private String addressLine;
 	private String pincode;
 	private String country;
+	private String state;
 	private String city;
+	
+	
+
+	/**
+	 * @return the state
+	 */
+	public String getState() {
+		return state;
+	}
+
+	/**
+	 * @param state the state to set
+	 */
+	public void setState(String state) {
+		this.state = state;
+	}
 
 	/**
 	 * @return the addressId

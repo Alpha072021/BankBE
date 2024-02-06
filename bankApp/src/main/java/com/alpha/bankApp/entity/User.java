@@ -17,6 +17,7 @@ import com.alpha.bankApp.enums.MaritalStatus;
 import com.alpha.bankApp.enums.OccupationType;
 import com.alpha.bankApp.enums.Status;
 import com.alpha.bankApp.enums.UserType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -45,6 +46,7 @@ public class User implements Comparable<User>, Serializable {
 	private long phoneNumber;
 	private String email;
 	private String gender;
+	@JsonIgnore
 	private String password;
 	private LocalDate dateOfBirth;
 	private LocalDateTime createdDateAndTime;

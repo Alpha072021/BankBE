@@ -8,10 +8,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.alpha.bankApp.dao.BankAccountDao;
 import com.alpha.bankApp.dao.BankDao;
 import com.alpha.bankApp.dao.BranchDao;
 import com.alpha.bankApp.dto.BankDto;
 import com.alpha.bankApp.entity.Bank;
+import com.alpha.bankApp.entity.BankAccount;
 import com.alpha.bankApp.entity.Branch;
 import com.alpha.bankApp.exception.AdminNotHaveAnyBankException;
 import com.alpha.bankApp.exception.BankNotFoundException;
@@ -28,6 +30,8 @@ public class BankServiceImpl implements BankService {
 	private BranchDao branchDao;
 	@Autowired
 	private BankUtil bankUtil;
+	@Autowired
+	private BankAccountDao bankAccountDao;
 
 	/**
 	 * @param the Bank Object to save
@@ -35,12 +39,15 @@ public class BankServiceImpl implements BankService {
 	 */
 	@Override
 	public ResponseEntity<ResponseStructure<Bank>> createBank(Bank bank) {
-
+		bank = bankDao.createBank(bank);
+		// creating bankAccount at the time of bank Creation
+		BankAccount bankAccount = bankUtil.createBankAccount(bank);
+		bankAccountDao.saveBankAccount(bankAccount);
 		// bank.setBankId(generateBankId(bank));
 		ResponseStructure<Bank> responseStructure = new ResponseStructure<>();
 		responseStructure.setStatusCode(HttpStatus.CREATED.value());
 		responseStructure.setMessage("Created");
-		responseStructure.setData(bankDao.createBank(bank));
+		responseStructure.setData(bank);
 		return new ResponseEntity<ResponseStructure<Bank>>(responseStructure, HttpStatus.CREATED);
 	}
 

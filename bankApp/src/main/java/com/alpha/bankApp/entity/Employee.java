@@ -52,7 +52,7 @@ public class Employee implements Comparable<Employee>, Serializable {
 	private Status status;
 
 	@OneToOne
-	@Cascade(CascadeType.PERSIST)
+	@Cascade({ CascadeType.PERSIST, CascadeType.MERGE })
 	private Address address;
 
 	@OneToOne

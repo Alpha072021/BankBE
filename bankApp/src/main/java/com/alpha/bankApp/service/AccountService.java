@@ -16,4 +16,6 @@ public interface AccountService {
 
 	ResponseEntity<ResponseStructure<AccountDto>> getAccountByAccountNumber(String accountNumber);
 
+	ResponseEntity<ResponseStructure<AccountDto>> updateAccount(AccountDto accountDto);
+
 }

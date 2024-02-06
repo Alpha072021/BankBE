@@ -8,4 +8,7 @@ import com.alpha.bankApp.util.ResponseStructure;
 public interface BankAccountService {
 
 	ResponseEntity<ResponseStructure<BankAccount>> getBankAccount(String bankId);
+
+	ResponseEntity<ResponseStructure<BankAccount>> updateBankAccountById(long bankAccountId, BankAccount bankAccount);
+
 }

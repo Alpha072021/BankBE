@@ -50,8 +50,12 @@ public class Branch implements Comparable<Branch>, Serializable {
 	@JsonIgnore
 	@OneToOne(fetch = FetchType.EAGER, cascade = { CascadeType.MERGE, CascadeType.PERSIST })
 	private Employee branchManager;
-
-	@OneToMany(mappedBy = "branch", fetch = FetchType.LAZY)
+	/*
+	 * Adjusted the CascadeType to eliminate the association with the bank or
+	 * branch, ensuring that when removing the bank or branch, the corresponding
+	 * account linked to the bank or branch will also be removed.
+	 */
+	@OneToMany(mappedBy = "branch", fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE })
 	@JsonIgnore
 	private List<Account> accounts;
 

@@ -10,7 +10,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.alpha.bankApp.exception.InvalidAuthorizationException;
+import com.alpha.bankApp.exception.UserNotFoundException;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -44,13 +44,14 @@ public class JWTAuthenticationFiler extends OncePerRequestFilter {
 				e.printStackTrace();
 			}
 			UserDetails userDetails = applicationUserDetailsService.loadUserByUsername(username);
+
 			if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 				UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
 						userDetails, null, userDetails.getAuthorities());
 				authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 				SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 			} else {
-				throw new InvalidAuthorizationException("INVALID USER");
+				throw new UserNotFoundException("INVALID USER");
 			}
 		}
 		filterChain.doFilter(request, response);

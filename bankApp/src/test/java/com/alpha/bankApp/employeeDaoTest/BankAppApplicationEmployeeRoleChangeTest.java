@@ -7,8 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.alpha.bankApp.dao.EmployeeDao;
 import com.alpha.bankApp.enums.Role;
 
-import jakarta.transaction.Transactional;
-
 @SpringBootTest
 class BankAppApplicationEmployeeRoleChangeTest {
 

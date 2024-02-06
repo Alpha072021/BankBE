@@ -6,8 +6,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.alpha.bankApp.dao.BranchManagerDao;
 
-import jakarta.transaction.Transactional;
-
 @SpringBootTest
 class BankAppApplicationBranchManagerDeleteTest1 {
 

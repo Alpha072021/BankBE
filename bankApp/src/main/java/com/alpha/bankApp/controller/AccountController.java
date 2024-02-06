@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,10 +26,10 @@ import com.alpha.bankApp.service.CurrentAccountService;
 import com.alpha.bankApp.service.SavingAccountService;
 import com.alpha.bankApp.util.ResponseStructure;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.Hidden;
 
 @RestController
-@RequestMapping("api/version/{version}/accounts")
+@RequestMapping("/api/version/{version}/accounts")
 public class AccountController {
 	@Autowired
 	@Qualifier("accountServiceImpl")
@@ -96,6 +98,7 @@ public class AccountController {
 		throw new VersionUnauthorizedException("Not An Authorized Version");
 	}
 
+	@Hidden
 	@GetMapping("/saving/getAccountByAccountNumber")
 	public ResponseEntity<ResponseStructure<SavingAccountDto>> getSavingAccountByAccountNumber(
 			@PathVariable String version, @RequestParam String accountNumber) {
@@ -128,11 +131,20 @@ public class AccountController {
 		throw new VersionUnauthorizedException("Not An Authorized Version");
 	}
 
+	@Hidden
 	@GetMapping("/current/getAccountByAccountNumber")
 	public ResponseEntity<ResponseStructure<CurrentAccountDto>> getCurrentAccountByAccountNumber(
 			@PathVariable String version, @RequestParam String accountNumber) {
 		if (version.equalsIgnoreCase("v1"))
 			return currentAccountService.getCurrentAccountByAccountNumber(accountNumber);
+		throw new VersionUnauthorizedException("Not An Authorized Version");
+	}
+
+	@PutMapping("/updateAccount")
+	public ResponseEntity<ResponseStructure<AccountDto>> updateAccount(@PathVariable String version,
+			@RequestBody AccountDto accountDto) {
+		if (version.equalsIgnoreCase("v1"))
+			return accountService.updateAccount(accountDto);
 		throw new VersionUnauthorizedException("Not An Authorized Version");
 	}
 

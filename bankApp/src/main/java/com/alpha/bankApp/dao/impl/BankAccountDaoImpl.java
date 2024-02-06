@@ -3,6 +3,7 @@
  */
 package com.alpha.bankApp.dao.impl;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,19 @@ public class BankAccountDaoImpl implements BankAccountDao {
 			return true;
 		}
 		return false;
+	}
+
+	// To Get the BankAccout based on the BankId
+	@Override
+	public Optional<BankAccount> getBankAccountByBankId(String bankId) {
+
+		return jpaRepository.findByBankId(bankId);
+	}
+
+	// To Find BankAccoutId Based on the BankId
+	@Override
+	public ArrayList<Long> getBankAccountIdByBankId(String bankId) {
+		return jpaRepository.getBankAccountIdByBankId(bankId);
 	}
 
 }

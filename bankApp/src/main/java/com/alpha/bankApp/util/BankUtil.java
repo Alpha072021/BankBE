@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import com.alpha.bankApp.dao.BankDao;
 import com.alpha.bankApp.dto.BankDto;
 import com.alpha.bankApp.entity.Bank;
+import com.alpha.bankApp.entity.BankAccount;
+import com.alpha.bankApp.entity.BankLedger;
 import com.alpha.bankApp.entity.idgenerator.AddressIdGenerator;
 
 @Component
@@ -54,6 +56,13 @@ public class BankUtil {
 			bank.setBankCreated(exsistingBank.getBankCreated());
 		}
 		return bank;
+	}
+
+	public BankAccount createBankAccount(Bank bank) {
+		BankAccount bankAccount = new BankAccount();
+		bankAccount.setBank(bank);
+		bankAccount.setBankLegder(new ArrayList<BankLedger>());
+		return bankAccount;
 	}
 
 }

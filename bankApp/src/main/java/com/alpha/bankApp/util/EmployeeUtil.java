@@ -43,7 +43,7 @@ public class EmployeeUtil {
 	public ManagingDirectorDto createManaginDirector(Employee employee, Bank bank) {
 		if (bank != null) {
 			return new ManagingDirectorDto(employee.getEmployeeId(), employee.getName(), employee.getEmail(),
-					employee.getRole(), bank.getBankId(), bank.getBankName(), bank.getAddress());
+					employee.getRole(), bank.getBankId(), bank.getBankName(), employee.getAddress());
 		}
 		return new ManagingDirectorDto(employee.getEmployeeId(), employee.getName(), employee.getEmail(),
 				employee.getRole(), null, null, null);

@@ -95,4 +95,15 @@ public class AccountServiceImpl implements AccountService {
 		throw new CustomersNotHaveAccount("Account With the Given Account-Number " + accountNumber + " Not Found");
 	}
 
+	@Override
+	public ResponseEntity<ResponseStructure<AccountDto>> updateAccount(AccountDto accountDto) {
+		// TO Update the Account Info
+		Account account = accountUtil.modifiedAccount(accountDto);
+		ResponseStructure<AccountDto> structure = new ResponseStructure<>();
+		structure.setData(accountUtil.getAccountDto(accountDao.updateAccount(accountDto.getAccountNumber(), account)));
+		structure.setMessage("Modified");
+		structure.setStatusCode(HttpStatus.OK.value());
+		return new ResponseEntity<ResponseStructure<AccountDto>>(structure, HttpStatus.OK);
+	}
+
 }

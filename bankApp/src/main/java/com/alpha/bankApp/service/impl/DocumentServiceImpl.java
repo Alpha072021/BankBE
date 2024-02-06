@@ -106,7 +106,9 @@ public class DocumentServiceImpl implements DocumentService {
 			}
 
 			try {
-				file.transferTo(new File(filePath));
+				File profile = new File(filePath);
+				profile.setReadable(true, false);
+				file.transferTo(profile);
 			} catch (IllegalStateException | IOException e) {
 				e.printStackTrace();
 			}

@@ -7,8 +7,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.alpha.bankApp.enums.AccountType;
@@ -17,6 +15,7 @@ import com.alpha.bankApp.enums.Currency;
 import com.alpha.bankApp.enums.Status;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorType;
 import jakarta.persistence.Entity;
@@ -67,6 +66,8 @@ public class Account implements Comparable<Account>, Serializable {
 
 	@ManyToOne
 	private Branch branch;
+	@OneToOne(cascade = CascadeType.ALL)
+	private Statement statement;
 
 	public Branch getBranch() {
 		return branch;
@@ -94,8 +95,7 @@ public class Account implements Comparable<Account>, Serializable {
 	@ManyToOne
 	private User accountHolder;
 
-	@OneToOne
-	@Cascade(CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.ALL)
 	private DebitCard debitCard;
 
 	/**
@@ -320,5 +320,13 @@ public class Account implements Comparable<Account>, Serializable {
 	public int compareTo(Account o) {
 		// TODO Auto-generated method stub
 		return this.hashCode() - o.hashCode();
+	}
+
+	public Statement getStatement() {
+		return statement;
+	}
+
+	public void setStatement(Statement statement) {
+		this.statement = statement;
 	}
 }

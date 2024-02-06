@@ -5,8 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.alpha.bankApp.dao.AdminDao;
-import com.alpha.bankApp.entity.Employee;
-import com.alpha.bankApp.enums.Role;
 
 @SpringBootTest
 class BankAppApplicationAdminSaveTest1 {
