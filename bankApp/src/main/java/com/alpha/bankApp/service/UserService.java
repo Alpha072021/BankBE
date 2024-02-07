@@ -21,4 +21,6 @@ public interface UserService {
 	ResponseEntity<ResponseStructure<List<User>>> findAllUserByBranchId(String branchId);
 
 	ResponseEntity<ResponseStructure<User>> updateUser(String userId, User user);
+
+	ResponseEntity<ResponseStructure<User>> getUserProfile(String token);
 }

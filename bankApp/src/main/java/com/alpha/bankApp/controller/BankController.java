@@ -21,6 +21,8 @@ import com.alpha.bankApp.service.BankService;
 import com.alpha.bankApp.util.BankUtil;
 import com.alpha.bankApp.util.ResponseStructure;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("api/version/{version}/banks")
 public class BankController {
@@ -30,7 +32,8 @@ public class BankController {
 	private BankUtil utill;
 
 	@PostMapping(consumes = "application/json", produces = "application/json")
-	public ResponseEntity<ResponseStructure<Bank>> createBank(@PathVariable String version, @RequestBody Bank bank) {
+	public ResponseEntity<ResponseStructure<Bank>> createBank(@PathVariable String version,
+			@RequestBody @Valid Bank bank) {
 		if (version.equalsIgnoreCase("v1"))
 			return bankService.createBank(utill.convertBankInfo(bank));
 		throw new VersionUnauthorizedException("Not An Authorized Version");

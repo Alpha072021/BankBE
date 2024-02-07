@@ -21,6 +21,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.alpha.bankApp.enums.Role;
+import com.alpha.bankApp.enums.UserType;
 
 @Configuration
 @EnableWebSecurity
@@ -69,6 +70,9 @@ public class BankAppSecurity {
 			"/api/version/{version}/accounts/current/getAccountByAccountNumber",
 			"/api/version/{version}/accounts/remove", "/api/version/{version}/accounts/updateAccount" };
 
+	private static final String[] ACCOUNT_HOLDER_URLS = { "/api/version/{version}/transactions/fundTransfer",
+			"/api/version/{version}/users/getUserProfile" };
+
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 //		http.csrf().disable().cors().and()
@@ -80,11 +84,13 @@ public class BankAppSecurity {
 						.requestMatchers(MANAGING_DIRECTOR_AND_BRANCH_MANAGER_URLS)
 						.hasAnyRole(Role.MANAGING_DIRECTOR.name(), Role.BRANCH_MANAGER.name())
 						.requestMatchers(MANAGING_DIRECTOR_URLS).hasRole(Role.MANAGING_DIRECTOR.name())
-						.requestMatchers(BRANCH_MANAGER_URLS).hasRole(Role.BRANCH_MANAGER.name()).anyRequest()
+						.requestMatchers(BRANCH_MANAGER_URLS).hasRole(Role.BRANCH_MANAGER.name())
+						.requestMatchers(ACCOUNT_HOLDER_URLS).hasRole(UserType.ACCOUNT_HOLDER.name()).anyRequest()
 						.authenticated())
 				.authenticationProvider(authenticationProvider())
-				.addFilterBefore(authenticationFiler, UsernamePasswordAuthenticationFilter.class)
-				.exceptionHandling((exception) -> exception.authenticationEntryPoint(authenticationEntryPoint()));
+				.addFilterBefore(authenticationFiler, UsernamePasswordAuthenticationFilter.class);
+		// .exceptionHandling((exception) ->
+		// exception.authenticationEntryPoint(authenticationEntryPoint()));
 		return http.build();
 	}
 

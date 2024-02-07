@@ -76,7 +76,7 @@ public class AdminServiceImpl extends EmployeeServiceImpl implements AdminServic
 		if (employee != null) {
 			if (employee.getRole().equals(Role.ADMIN)) {
 				UserDetails userDetails = applicationUserDetailsService.loadUserByUsername(email);
-				String jwtToken = jwtUtils.generateToken(userDetails, employee.getEmployeeId(), employee.getRole());
+				String jwtToken = jwtUtils.generateToken(userDetails, employee.getEmployeeId(), employee.getRole().name());
 				employee.setToken(jwtToken);
 				adminDao.saveEmployee(employee);
 				ResponseStructure<String> responseStructure = new ResponseStructure<>();

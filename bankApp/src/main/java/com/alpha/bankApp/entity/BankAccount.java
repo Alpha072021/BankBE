@@ -5,6 +5,7 @@ package com.alpha.bankApp.entity;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -16,7 +17,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 
 /**
  * @author Vinod Raj
@@ -33,9 +33,9 @@ public class BankAccount {
 	private double bankBalance;
 	private double cashInFlow;
 	private double cashOutFlow;
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	private Bank bank;
-	@OneToMany(mappedBy = "bankAccount", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "bankAccount", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<BankLedger> bankLegder;
 
 }

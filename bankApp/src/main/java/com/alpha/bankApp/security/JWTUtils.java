@@ -8,8 +8,6 @@ import java.util.function.Function;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import com.alpha.bankApp.enums.Role;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -40,7 +38,7 @@ public class JWTUtils {
 		return extractExpiration(token).before(new Date());
 	}
 
-	public String generateToken(UserDetails userDetails, String userId, Role role) {
+	public String generateToken(UserDetails userDetails, String userId, String role) {
 		Map<String, Object> claims = new HashMap<>();
 		claims.put("userId", userId);
 		claims.put("role", role);

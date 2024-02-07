@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,6 +56,14 @@ public class UserController {
 			return service.updateUser(userId, user);
 		throw new VersionUnauthorizedException("Not An Authorized Version");
 
+	}
+
+	@GetMapping("/getUserProfile")
+	public ResponseEntity<ResponseStructure<User>> getUserProfile(@PathVariable String version,
+			@RequestHeader("Authorization") String token) {
+		if (version.equalsIgnoreCase("v1"))
+			return service.getUserProfile(token);
+		throw new VersionUnauthorizedException("Not An Authorized Version");
 	}
 
 }

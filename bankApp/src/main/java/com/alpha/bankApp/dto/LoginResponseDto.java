@@ -2,12 +2,10 @@ package com.alpha.bankApp.dto;
 
 import org.springframework.stereotype.Component;
 
-import com.alpha.bankApp.enums.Role;
-
 @Component
 public class LoginResponseDto {
 	private String token;
-	private Role role;
+	private String role;
 
 	public String getToken() {
 		return token;
@@ -17,11 +15,11 @@ public class LoginResponseDto {
 		this.token = token;
 	}
 
-	public Role getRole() {
+	public String getRole() {
 		return role;
 	}
 
-	public void setRole(Role role) {
+	public void setRole(String role) {
 		this.role = role;
 	}
 

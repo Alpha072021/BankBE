@@ -158,17 +158,20 @@ public class BranchManagerServiceImpl extends EmployeeServiceImpl implements Bra
 	public ResponseEntity<ResponseStructure<Employee>> saveBranchManager(String branchId, Employee employee) {
 		Branch branch = branchDao.getBranch(branchId);
 		if (branch != null) {
-			employee = util.convertEmployeeInfo(employee);
-			employee.setRole(Role.BRANCH_MANAGER);
-			employee = branchManagerDao.saveEmployee(employee);
-			if (branchManagerDao.setBranchManager(branchId, employee.getEmployeeId())) {
-				ResponseStructure<Employee> responseStructure = new ResponseStructure<>();
-				responseStructure.setData(employee);
-				responseStructure.setMessage("Created");
-				responseStructure.setStatusCode(HttpStatus.CREATED.value());
-				return new ResponseEntity<ResponseStructure<Employee>>(responseStructure, HttpStatus.CREATED);
+			if (branch.getBranchManager() == null) {
+				employee = util.convertEmployeeInfo(employee);
+				employee.setRole(Role.BRANCH_MANAGER);
+				employee = branchManagerDao.saveEmployee(employee);
+				if (branchManagerDao.setBranchManager(branchId, employee.getEmployeeId())) {
+					ResponseStructure<Employee> responseStructure = new ResponseStructure<>();
+					responseStructure.setData(employee);
+					responseStructure.setMessage("Created");
+					responseStructure.setStatusCode(HttpStatus.CREATED.value());
+					return new ResponseEntity<ResponseStructure<Employee>>(responseStructure, HttpStatus.CREATED);
+				}
+				throw new EmployeeNotAssingedRoleException("Branch Not Assigned An BranchManager");
 			}
-			throw new EmployeeNotAssingedRoleException("Branch Not Assigned An BranchManager");
+			throw new BranchNotAssignedException("The Branch already has a branch Manager. I guess you're too late for the job.");
 		}
 
 		throw new BranchNotFoundException("Branch With the Given Id " + branchId + " Not Found");

@@ -14,6 +14,7 @@ import com.alpha.bankApp.dto.ManagingDirectorDto;
 import com.alpha.bankApp.entity.Bank;
 import com.alpha.bankApp.entity.Employee;
 import com.alpha.bankApp.enums.Role;
+import com.alpha.bankApp.exception.BankAssignedManagingDirectorException;
 import com.alpha.bankApp.exception.BankNotAssignedMDException;
 import com.alpha.bankApp.exception.BankNotFoundException;
 import com.alpha.bankApp.exception.EmployeeNotAssingedRoleException;
@@ -141,20 +142,24 @@ public class ManagingDirectorServiceImpl extends EmployeeServiceImpl implements 
 		Bank bank = bankDao.getBank(bankId);
 		Employee updateEmployee = null;
 		if (bank != null) {
-			employee = util.convertEmployeeInfo(employee);
-			employee.setRole(Role.MANAGING_DIRECTOR);
-			updateEmployee = employeeDao.saveEmployee(employee);
-			boolean flag = directorDao.setManagingDirector(bankId, updateEmployee.getEmployeeId());
-			ManagingDirectorDto managinDirector = util.createManaginDirector(updateEmployee, bank);
-			if (flag) {
-				ResponseStructure<ManagingDirectorDto> responseStructure = new ResponseStructure<>();
-				responseStructure.setData(managinDirector);
-				responseStructure.setStatusCode(HttpStatus.CREATED.value());
-				responseStructure.setMessage("Employee Created As MD and Assigned to an Bank");
-				return new ResponseEntity<ResponseStructure<ManagingDirectorDto>>(responseStructure,
-						HttpStatus.CREATED);
+			if (bank.getManagingDirector() == null) {
+				employee = util.convertEmployeeInfo(employee);
+				employee.setRole(Role.MANAGING_DIRECTOR);
+				updateEmployee = employeeDao.saveEmployee(employee);
+				boolean flag = directorDao.setManagingDirector(bankId, updateEmployee.getEmployeeId());
+				ManagingDirectorDto managinDirector = util.createManaginDirector(updateEmployee, bank);
+				if (flag) {
+					ResponseStructure<ManagingDirectorDto> responseStructure = new ResponseStructure<>();
+					responseStructure.setData(managinDirector);
+					responseStructure.setStatusCode(HttpStatus.CREATED.value());
+					responseStructure.setMessage("Employee Created As MD and Assigned to an Bank");
+					return new ResponseEntity<ResponseStructure<ManagingDirectorDto>>(responseStructure,
+							HttpStatus.CREATED);
+				}
+				throw new BankNotAssignedMDException("Bank Not Assigned An ManagingDirector");
 			}
-			throw new BankNotAssignedMDException("Bank Not Assigned An ManagingDirector");
+			throw new BankAssignedManagingDirectorException(
+					"The bank already has a managing director. I guess you're too late for the job.");
 		}
 		throw new BankNotFoundException("Bank with the Given Id " + bankId + " Not Found");
 

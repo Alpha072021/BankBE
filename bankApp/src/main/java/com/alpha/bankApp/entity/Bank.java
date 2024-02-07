@@ -17,6 +17,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
 public class Bank implements Comparable<Bank>, Serializable {
@@ -28,6 +29,7 @@ public class Bank implements Comparable<Bank>, Serializable {
 	@GeneratedValue(generator = "bankId", strategy = GenerationType.SEQUENCE)
 	@GenericGenerator(name = "bankId", strategy = "com.alpha.bankApp.entity.idgenerator.BankIdGenerator")
 	private String bankId;
+	@Pattern(regexp = "^[^\\s]{0,3}\\S.*$", message = "Invalid bank name format")
 	private String bankName;
 	@JsonIgnore
 	private LocalDateTime bankCreated;

@@ -226,4 +226,24 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 		return new ResponseEntity<ResponseStructure<String>>(responseStructure, HttpStatus.BAD_REQUEST);
 	}
 
+	@ExceptionHandler(BankAssignedManagingDirectorException.class)
+	public ResponseEntity<ResponseStructure<String>> handleBankAssignedManagingDirectorException(
+			BankAssignedManagingDirectorException exception) {
+		ResponseStructure<String> responseStructure = new ResponseStructure<>();
+		responseStructure.setData(exception.getMessage());
+		responseStructure.setMessage("The bank already has a managing director. I guess you're too late for the job.");
+		responseStructure.setStatusCode(HttpStatus.BAD_REQUEST.value());
+		return new ResponseEntity<ResponseStructure<String>>(responseStructure, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(InsufficientBalanceException.class)
+	public ResponseEntity<ResponseStructure<String>> handleInsufficientBalanceException(
+			InsufficientBalanceException exception) {
+		ResponseStructure<String> responseStructure = new ResponseStructure<>();
+		responseStructure.setData(exception.getMessage());
+		responseStructure.setMessage("Insufficient Funds");
+		responseStructure.setStatusCode(HttpStatus.BAD_REQUEST.value());
+		return new ResponseEntity<ResponseStructure<String>>(responseStructure, HttpStatus.BAD_REQUEST);
+	}
+
 }

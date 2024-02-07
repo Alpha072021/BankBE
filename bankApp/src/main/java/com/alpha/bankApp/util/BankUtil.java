@@ -13,6 +13,7 @@ import com.alpha.bankApp.entity.Bank;
 import com.alpha.bankApp.entity.BankAccount;
 import com.alpha.bankApp.entity.BankLedger;
 import com.alpha.bankApp.entity.idgenerator.AddressIdGenerator;
+import com.alpha.bankApp.exception.InvalidBankNameException;
 
 @Component
 public class BankUtil {
@@ -23,15 +24,27 @@ public class BankUtil {
 
 	public Bank convertBankInfo(Bank bank) {
 		if (bank.getBankName() != null) {
-			bank.setBankName(bank.getBankName().toLowerCase());
+			if (bank.getBankName().length() > 4) {
+				if (!(bank.getBankName().substring(0, 4).contains(" "))) {
+					if (bank.getBankName() != null) {
+						bank.setBankName(bank.getBankName().toLowerCase());
+					}
+					if (bank.getAddress() != null) {
+						bank.getAddress().setAddressId(generator.generate());
+					}
+					if (bank.getBankCreated() == null) {
+						bank.setBankCreated(LocalDateTime.now());
+					}
+					return bank;
+				}
+				throw new InvalidBankNameException(
+						"Why would anyone put spaces in the first four characters of a bank name? That's just silly.");
+			}
+			throw new InvalidBankNameException(
+					"Why would anyone use less than four characters of a bank name?  That's just silly.");
 		}
-		if (bank.getAddress() != null) {
-			bank.getAddress().setAddressId(generator.generate());
-		}
-		if (bank.getBankCreated() == null) {
-			bank.setBankCreated(LocalDateTime.now());
-		}
-		return bank;
+		throw new InvalidBankNameException(
+				"What might be the reason for omitting the bank name when creating bank details?? That's just silly.");
 	}
 
 	public BankDto getBankDto(Bank bank) {

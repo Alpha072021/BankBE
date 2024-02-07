@@ -1,6 +1,7 @@
 package com.alpha.bankApp.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -99,6 +100,13 @@ public class BankServiceImpl implements BankService {
 	public ResponseEntity<ResponseStructure<String>> deleteBank(String bankId) {
 		Bank bank = bankDao.getBank(bankId);
 		if (bank != null) {
+			Optional<BankAccount> optional = bankAccountDao.getBankAccountByBankId(bankId);
+			if (optional.isPresent()) {
+				BankAccount bankAccount = optional.get();
+				bankAccount.setBank(null);
+				bankAccountDao.updateBankAccountById(bankAccount.getBankAccountId(), bankAccount);
+				bankAccountDao.deleteBankAccountById(bankAccount.getBankAccountId());
+			}
 			bankDao.deleteBank(bankId);
 			ResponseStructure<String> responseStructure = new ResponseStructure<>();
 			responseStructure.setStatusCode(HttpStatus.NO_CONTENT.value());

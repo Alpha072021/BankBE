@@ -14,6 +14,7 @@ import com.alpha.bankApp.entity.Branch;
 import com.alpha.bankApp.entity.User;
 import com.alpha.bankApp.exception.BranchNotFoundException;
 import com.alpha.bankApp.exception.UserNotFoundException;
+import com.alpha.bankApp.security.JWTUtils;
 import com.alpha.bankApp.service.UserService;
 import com.alpha.bankApp.util.AccountUtil;
 import com.alpha.bankApp.util.ResponseStructure;
@@ -34,6 +35,8 @@ public class UserServiceImpl implements UserService {
 	private AccountUtil accountUtil;
 	@Autowired
 	private BranchDao branchDao;
+	@Autowired
+	private JWTUtils jwtUtils;
 
 //To save the User Details
 	@Override
@@ -103,6 +106,21 @@ public class UserServiceImpl implements UserService {
 			return new ResponseEntity<ResponseStructure<User>>(structure, HttpStatus.OK);
 		}
 		throw new UserNotFoundException("User With the Given Id " + userId + " Not Found");
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<User>> getUserProfile(String token) {
+		token = token.substring(7);
+		String userId = (String) jwtUtils.extractAllClaims(token).get("userId");
+		Optional<User> optional = dao.findUserById(userId);
+		if (optional.isPresent()) {
+			ResponseStructure<User> structure = new ResponseStructure<>();
+			structure.setData(optional.get());
+			structure.setMessage("Found");
+			structure.setStatusCode(HttpStatus.OK.value());
+			return new ResponseEntity<ResponseStructure<User>>(structure, HttpStatus.OK);
+		}
+		throw new UserNotFoundException("Not An Authorized User");
 	}
 
 }

@@ -8,5 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class BankAppApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(BankAppApplication.class, args);	
+		char r=14+13;
+		System.out.println(r);
 	}
 }
