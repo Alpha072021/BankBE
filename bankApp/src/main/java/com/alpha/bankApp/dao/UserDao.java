@@ -24,4 +24,10 @@ public interface UserDao {
 	String findLastUser();
 
 	List<User> findAllUserByBranchId(String branchId);
+
+	/*
+	 * This method is specifically designed to retrieve Customer profiles based on
+	 * their user IDs.
+	 */
+	String findUserProfileById(String id);
 }

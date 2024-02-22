@@ -35,7 +35,8 @@ public class BankAppSecurity {
 	private JWTAuthenticationFiler authenticationFiler;
 	private static final String[] PUBLIC_URLS = { "/swagger-apis/**", "/swagger-ui/**", "/v3/api-docs/**",
 			"/swagger-ui.html", "/api/version/{version}/login", "/swagger-ui/index.html",
-			"/api/version/{version}/employees" };
+			"/api/version/{version}/employees", "/api/version/{version}/users",
+			"/api/version/{version}/documents/saveProfile" ,"/api/version/{version}/documents/findProfile"};
 
 	private static final String[] ADMIN_URLS = { "/api/version/{version}/banks", "/api/version/{version}/banks/getAll",
 			"/api/version/{version}/banks/bankId/{bankId}", "/api/version/v1/banks/bankId",
@@ -54,15 +55,17 @@ public class BankAppSecurity {
 			"/api/version/{version}/branchManagers/delete", "/api/version/{version}/branchManagers/getAll",
 			"/api/version/{version}/accounts/saving/getAllAccounts/bankId",
 			"/api/version/{version}/accounts/getAllAccounts/bankId",
-			"/api/version/{version}/accounts/current/getAllAccounts/bankId" };
+			"/api/version/{version}/accounts/current/getAllAccounts/bankId",
+			"/api/version/{version}/managingDirectors/getManagingDirectorDashBoard" };
 
 	private static final String[] BRANCH_MANAGER_URLS = { "/api/version/{version}/documents",
 			"/api/version/{version}/documents", "/api/version/{version}/branchManagers/getBranchManager",
-			"/api/version/{version}/users", "/api/version/{version}/users/getById",
 			"/api/version/{version}/users/getAllUsersByBrancId", "/api/version/{version}/accounts/saving",
 			"/api/version/{version}/accounts/current", "/api/version/{version}/accounts/saving/getAllAccounts/branchId",
 			"/api/version/{version}/accounts/getAllAccounts/branchId",
-			"/api/version/{version}/accounts/current/getAllAccounts/branchId" };
+			"/api/version/{version}/accounts/current/getAllAccounts/branchId",
+			"/api/version/{version}/accounts/debitCard/changeApproval",
+			"/api/version/{version}/branchManagers/getBranchManagerDashBoard" };
 
 	private static final String[] MANAGING_DIRECTOR_AND_BRANCH_MANAGER_URLS = {
 			"/api/version/{version}/accounts/getAccountByAccountNumber",
@@ -71,7 +74,15 @@ public class BankAppSecurity {
 			"/api/version/{version}/accounts/remove", "/api/version/{version}/accounts/updateAccount" };
 
 	private static final String[] ACCOUNT_HOLDER_URLS = { "/api/version/{version}/transactions/fundTransfer",
-			"/api/version/{version}/users/getUserProfile" };
+			"/api/version/{version}/users/getUserProfile", "/api/version/{version}/beneficiarys",
+			"/api/version/{version}/beneficiarys/findAll", "/api/version/{version}/transactions/passBook",
+			"/api/version/v1/transactions/deposit", "/api/version/{version}/transactions/getAccountStatement",
+			"/api/version/{version}/transactions/getAccountStatement/downloadExcel",
+			"/api/version/{version}/transactions/getAccountStatement/downloadPDF",
+			"/api/version/{version}/beneficiarys/findBeneficiary" };
+
+	private static final String[] ACCOUNT_HOLDER_AND_BRANCH_MANAGER_URLS = {
+			"/api/version/{version}/accounts/debitCard/changeStatus" };
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -85,6 +96,8 @@ public class BankAppSecurity {
 						.hasAnyRole(Role.MANAGING_DIRECTOR.name(), Role.BRANCH_MANAGER.name())
 						.requestMatchers(MANAGING_DIRECTOR_URLS).hasRole(Role.MANAGING_DIRECTOR.name())
 						.requestMatchers(BRANCH_MANAGER_URLS).hasRole(Role.BRANCH_MANAGER.name())
+						.requestMatchers(ACCOUNT_HOLDER_AND_BRANCH_MANAGER_URLS)
+						.hasAnyRole(Role.BRANCH_MANAGER.name(), UserType.ACCOUNT_HOLDER.name())
 						.requestMatchers(ACCOUNT_HOLDER_URLS).hasRole(UserType.ACCOUNT_HOLDER.name()).anyRequest()
 						.authenticated())
 				.authenticationProvider(authenticationProvider())

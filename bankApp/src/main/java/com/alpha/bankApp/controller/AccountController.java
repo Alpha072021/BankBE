@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alpha.bankApp.dto.AccountApprovalDto;
 import com.alpha.bankApp.dto.AccountDto;
+import com.alpha.bankApp.dto.AccountStatusDto;
 import com.alpha.bankApp.dto.CurrentAccountDto;
 import com.alpha.bankApp.dto.SavingAccountDto;
 import com.alpha.bankApp.entity.CurrentAccount;
@@ -27,6 +30,9 @@ import com.alpha.bankApp.service.SavingAccountService;
 import com.alpha.bankApp.util.ResponseStructure;
 
 import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
 @RequestMapping("/api/version/{version}/accounts")
@@ -41,6 +47,15 @@ public class AccountController {
 	@Qualifier("currentAccountServiceImpl")
 	private CurrentAccountService currentAccountService;
 
+	@Operation(summary = "All Account of Branch", description = "returns all account based on branchId", tags = {
+			"Bank Account" })
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "201", description = "Sucess"),
+			@ApiResponse(responseCode = "400", description = "Bad request"),
+			@ApiResponse(responseCode = "401", description = "Not Authorised"),
+			@ApiResponse(responseCode = "403", description = "Access Forbidden"),
+			@ApiResponse(responseCode = "404", description = "Not An Authorized Version") })
+
 	@GetMapping("/getAllAccounts/branchId")
 	public ResponseEntity<ResponseStructure<List<AccountDto>>> getAllAccountsByBranchId(@PathVariable String version,
 			@RequestParam String branchId) {
@@ -48,6 +63,14 @@ public class AccountController {
 			return accountService.getAllAccountsByBranchId(branchId);
 		throw new VersionUnauthorizedException("Not An Authorized Version");
 	}
+	@Operation(summary = "All Account of Bank", description = "returns all account based on bankId", tags = {
+	"Bank Account" })
+@ApiResponses(value = {
+	@ApiResponse(responseCode = "201", description = "Sucess"),
+	@ApiResponse(responseCode = "400", description = "Bad request"),
+	@ApiResponse(responseCode = "401", description = "Not Authorised"),
+	@ApiResponse(responseCode = "403", description = "Access Forbidden"),
+	@ApiResponse(responseCode = "404", description = "Not An Authorized Version") })
 
 	@GetMapping("/getAllAccounts/bankId")
 	public ResponseEntity<ResponseStructure<List<AccountDto>>> getAllAccountsBybankId(@PathVariable String version,
@@ -56,7 +79,14 @@ public class AccountController {
 			return accountService.getAllAccountsBybankId(bankId);
 		throw new VersionUnauthorizedException("Not An Authorized Version");
 	}
-
+	@Operation(summary = "Remove Account", description = "Remove Account from Application", tags = {
+	"Bank Account" })
+@ApiResponses(value = {
+	@ApiResponse(responseCode = "201", description = "Sucess"),
+	@ApiResponse(responseCode = "400", description = "Bad request"),
+	@ApiResponse(responseCode = "401", description = "Not Authorised"),
+	@ApiResponse(responseCode = "403", description = "Access Forbidden"),
+	@ApiResponse(responseCode = "404", description = "Not An Authorized Version") })
 	@DeleteMapping("/remove")
 	public ResponseEntity<ResponseStructure<String>> deleteAccountByAccountNumber(@PathVariable String version,
 			@RequestParam String accountNumber) {
@@ -74,6 +104,7 @@ public class AccountController {
 		throw new VersionUnauthorizedException("Not An Authorized Version");
 	}
 
+	@Hidden
 	@PostMapping("/saving")
 	public ResponseEntity<ResponseStructure<SavingsAccount>> saveAccount(@PathVariable String version,
 			@RequestParam String userId, @RequestParam String branchId, @RequestBody SavingsAccount account) {
@@ -107,6 +138,7 @@ public class AccountController {
 		throw new VersionUnauthorizedException("Not An Authorized Version");
 	}
 
+	@Hidden
 	@PostMapping("/current")
 	public ResponseEntity<ResponseStructure<CurrentAccount>> saveAccount(@PathVariable String version,
 			@RequestParam String userId, @RequestParam String branchId, @RequestBody CurrentAccount account) {
@@ -145,6 +177,22 @@ public class AccountController {
 			@RequestBody AccountDto accountDto) {
 		if (version.equalsIgnoreCase("v1"))
 			return accountService.updateAccount(accountDto);
+		throw new VersionUnauthorizedException("Not An Authorized Version");
+	}
+
+	@PatchMapping("/debitCard/changeStatus")
+	public ResponseEntity<ResponseStructure<String>> updateDebitCardStatus(@PathVariable String version,
+			@RequestBody AccountStatusDto accountStatus) {
+		if (version.equalsIgnoreCase("v1"))
+			return accountService.updateDebitCardStatus(accountStatus);
+		throw new VersionUnauthorizedException("Not An Authorized Version");
+	}
+
+	@PatchMapping("/debitCard/changeApproval")
+	public ResponseEntity<ResponseStructure<String>> updateDebitCardApproval(@PathVariable String version,
+			@RequestBody AccountApprovalDto accountApproval) {
+		if (version.equalsIgnoreCase("v1"))
+			return accountService.updateDebitCardApproval(accountApproval);
 		throw new VersionUnauthorizedException("Not An Authorized Version");
 	}
 

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 
+import com.alpha.bankApp.dto.UserDto;
 import com.alpha.bankApp.entity.User;
 import com.alpha.bankApp.util.ResponseStructure;
 
@@ -22,5 +23,5 @@ public interface UserService {
 
 	ResponseEntity<ResponseStructure<User>> updateUser(String userId, User user);
 
-	ResponseEntity<ResponseStructure<User>> getUserProfile(String token);
+	ResponseEntity<ResponseStructure<UserDto>> getUserProfile(String token);
 }

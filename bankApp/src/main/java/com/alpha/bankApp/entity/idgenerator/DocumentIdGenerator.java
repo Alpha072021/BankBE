@@ -19,9 +19,11 @@ public class DocumentIdGenerator implements IdentifierGenerator {
 		String lastContainerId = "";
 		String sql = "SELECT document_id FROM document ORDER BY creation_date_time DESC LIMIT 1";
 		JdbcConnectionAccess jdbcConnectionAccess = session.getJdbcConnectionAccess();
+		Connection connection = null;
+		ResultSet resultSet = null;
 		try {
-			Connection connection = jdbcConnectionAccess.obtainConnection();
-			ResultSet resultSet = connection.createStatement().executeQuery(sql);
+			connection = jdbcConnectionAccess.obtainConnection();
+			resultSet = connection.createStatement().executeQuery(sql);
 			if (resultSet.next()) {
 				lastContainerId = resultSet.getString("document_id");
 			} else {
@@ -29,6 +31,21 @@ public class DocumentIdGenerator implements IdentifierGenerator {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (resultSet != null) {
+				try {
+					resultSet.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		int id = Integer.parseInt(lastContainerId);
 		if (id >= 1) {

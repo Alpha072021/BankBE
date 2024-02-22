@@ -52,4 +52,10 @@ public interface EmployeeDao {
 	 * @return List of Employee
 	 */
 	List<Employee> getEmployeeByRole(Role role);
+
+	/*
+	 * This method is specifically designed to retrieve Employee profiles based on their
+	 * employee IDs.
+	 */
+	String findEmployeeProfileById(String id);
 }

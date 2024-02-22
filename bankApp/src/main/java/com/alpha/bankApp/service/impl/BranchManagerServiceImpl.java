@@ -11,11 +11,13 @@ import com.alpha.bankApp.dao.BankDao;
 import com.alpha.bankApp.dao.BranchDao;
 import com.alpha.bankApp.dao.BranchManagerDao;
 import com.alpha.bankApp.dao.EmployeeDao;
+import com.alpha.bankApp.dto.BranchManagerDashBoardDto;
 import com.alpha.bankApp.dto.BranchManagerDto;
 import com.alpha.bankApp.entity.Bank;
 import com.alpha.bankApp.entity.Branch;
 import com.alpha.bankApp.entity.Employee;
 import com.alpha.bankApp.enums.Role;
+import com.alpha.bankApp.exception.BankAccountNotFoundException;
 import com.alpha.bankApp.exception.BankNotFoundException;
 import com.alpha.bankApp.exception.BranchNotAssignedException;
 import com.alpha.bankApp.exception.BranchNotFoundException;
@@ -24,6 +26,7 @@ import com.alpha.bankApp.exception.EmployeeNotFoundException;
 import com.alpha.bankApp.exception.UnauthorizedException;
 import com.alpha.bankApp.security.JWTUtils;
 import com.alpha.bankApp.service.BranchManagerService;
+import com.alpha.bankApp.util.BranchUtil;
 import com.alpha.bankApp.util.EmployeeUtil;
 import com.alpha.bankApp.util.ResponseStructure;
 
@@ -41,6 +44,8 @@ public class BranchManagerServiceImpl extends EmployeeServiceImpl implements Bra
 	private EmployeeUtil util;
 	@Autowired
 	private JWTUtils jwtUtils;
+	@Autowired
+	private BranchUtil branchUtil;
 
 	@Override
 	public ResponseEntity<ResponseStructure<Employee>> setBranchManager(String branchId, String employeeId) {
@@ -171,7 +176,8 @@ public class BranchManagerServiceImpl extends EmployeeServiceImpl implements Bra
 				}
 				throw new EmployeeNotAssingedRoleException("Branch Not Assigned An BranchManager");
 			}
-			throw new BranchNotAssignedException("The Branch already has a branch Manager. I guess you're too late for the job.");
+			throw new BranchNotAssignedException(
+					"The Branch already has a branch Manager. I guess you're too late for the job.");
 		}
 
 		throw new BranchNotFoundException("Branch With the Given Id " + branchId + " Not Found");
@@ -239,8 +245,9 @@ public class BranchManagerServiceImpl extends EmployeeServiceImpl implements Bra
 		if (employee != null && employee.getRole().equals(Role.BRANCH_MANAGER)) {
 			Branch branch = branchDao.findBranchByBranchManagerId(employee.getEmployeeId());
 			if (branch != null) {
+				String bankName = bankDao.findBankNameByBranchId(branch.getBranchId());
 				ResponseStructure<BranchManagerDto> structure = new ResponseStructure<>();
-				structure.setData(util.getBranchManagerDto(branch));
+				structure.setData(util.getBranchManagerDto(branch, bankName));
 				structure.setMessage("Found");
 				structure.setStatusCode(HttpStatus.OK.value());
 				return new ResponseEntity<ResponseStructure<BranchManagerDto>>(structure, HttpStatus.OK);
@@ -248,6 +255,25 @@ public class BranchManagerServiceImpl extends EmployeeServiceImpl implements Bra
 			throw new BranchNotAssignedException("Employee UnAssigned As BranchManager");
 		}
 		throw new UnauthorizedException("Invalied Token");
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<BranchManagerDashBoardDto>> getBranchManagerDashBoard(String branchId) {
+		Branch branch = branchDao.getBranch(branchId);
+		if (branch != null) {
+			if (branch.getAccounts() != null && !(branch.getAccounts().isEmpty())) {
+				BranchManagerDashBoardDto dashBoardDto = branchUtil.generateBranchManagerDashBoard(branch);
+				ResponseStructure<BranchManagerDashBoardDto> structure = new ResponseStructure<>();
+				structure.setData(dashBoardDto);
+				structure.setMessage("Found");
+				structure.setStatusCode(HttpStatus.OK.value());
+				return new ResponseEntity<ResponseStructure<BranchManagerDashBoardDto>>(structure, HttpStatus.OK);
+			}
+			throw new BankAccountNotFoundException();
+
+		}
+		throw new BranchNotFoundException("Branch With the Give BranchManagerId " + branchId + " Not Found");
+
 	}
 
 }

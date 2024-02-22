@@ -246,4 +246,69 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 		return new ResponseEntity<ResponseStructure<String>>(responseStructure, HttpStatus.BAD_REQUEST);
 	}
 
+	// handling beneficiary information that is invalid
+	@ExceptionHandler(InvalidBeneficiaryInfoException.class)
+	public ResponseEntity<ResponseStructure<String>> handleInvalidBeneficiaryInfoException(
+			InvalidBeneficiaryInfoException exception) {
+		ResponseStructure<String> responseStructure = new ResponseStructure<>();
+		responseStructure.setData(exception.getMessage());
+		responseStructure.setMessage("Invalid Beneficiary Info Found");
+		responseStructure.setStatusCode(HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<ResponseStructure<String>>(responseStructure, HttpStatus.NOT_FOUND);
+	}
+
+	// handling beneficiary information is Not found
+	@ExceptionHandler(UserBeneficiaryNotFound.class)
+	public ResponseEntity<ResponseStructure<String>> handleUserBeneficiaryNotFound(UserBeneficiaryNotFound exception) {
+		ResponseStructure<String> responseStructure = new ResponseStructure<>();
+		responseStructure.setData(exception.getMessage());
+		responseStructure.setMessage("User Not have Beneficiary ");
+		responseStructure.setStatusCode(HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<ResponseStructure<String>>(responseStructure, HttpStatus.NOT_FOUND);
+	}
+
+	/*
+	 * handled the scenario where a user lacks transactions when their account has
+	 * no transaction details
+	 */
+	@ExceptionHandler(UserLacksTransactions.class)
+	public ResponseEntity<ResponseStructure<String>> handleUserLacksTransactions(UserLacksTransactions exception) {
+		ResponseStructure<String> responseStructure = new ResponseStructure<>();
+		responseStructure.setData(exception.getMessage());
+		responseStructure.setMessage("User Not have any Transactions");
+		responseStructure.setStatusCode(HttpStatus.NO_CONTENT.value());
+		return new ResponseEntity<ResponseStructure<String>>(responseStructure, HttpStatus.NO_CONTENT);
+	}
+
+	/*
+	 * addressed the situation in which a bank lacks a bank ledger.
+	 */
+	@ExceptionHandler(BankLedgerNotFound.class)
+	public ResponseEntity<ResponseStructure<String>> handleBankLedgerNotFound(BankLedgerNotFound exception) {
+		ResponseStructure<String> responseStructure = new ResponseStructure<>();
+		responseStructure.setData(exception.getMessage());
+		responseStructure.setMessage("I couldn't find any records related to BankLedger. ");
+		responseStructure.setStatusCode(HttpStatus.NO_CONTENT.value());
+		return new ResponseEntity<ResponseStructure<String>>(responseStructure, HttpStatus.NO_CONTENT);
+	}
+
+	// handling Debit Card Not Found Exception
+	@ExceptionHandler(DebitCardNotFound.class)
+	public ResponseEntity<ResponseStructure<String>> handleDebitCardNotFound(DebitCardNotFound exception) {
+		ResponseStructure<String> responseStructure = new ResponseStructure<>();
+		responseStructure.setData(exception.getMessage());
+		responseStructure.setMessage("Debit Card Found");
+		responseStructure.setStatusCode(HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<ResponseStructure<String>>(responseStructure, HttpStatus.NOT_FOUND);
+	}
+
+	@ExceptionHandler(UserProfileNotFound.class)
+	public ResponseEntity<ResponseStructure<String>> handleUserProfileNotFoundException(UserProfileNotFound exception) {
+		ResponseStructure<String> responseStructure = new ResponseStructure<>();
+		responseStructure.setData(exception.getMessage());
+		responseStructure.setMessage("User Profile Not Found");
+		responseStructure.setStatusCode(HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<ResponseStructure<String>>(responseStructure, HttpStatus.NOT_FOUND);
+	}
+
 }

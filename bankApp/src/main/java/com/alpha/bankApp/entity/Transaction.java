@@ -42,6 +42,7 @@ public class Transaction {
 	private LocalDateTime enedDate;
 	@Enumerated(EnumType.STRING)
 	private TransactionType type;
+	private double balance;
 	@ManyToOne
 	@JsonIgnore
 	private Statement statement;

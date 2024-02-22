@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.alpha.bankApp.dto.CurrentAccountDto;
+import com.alpha.bankApp.dto.DebitCardDto;
 import com.alpha.bankApp.entity.Account;
 import com.alpha.bankApp.entity.Branch;
 import com.alpha.bankApp.entity.CurrentAccount;
@@ -41,7 +42,8 @@ public class CurrentAccountutil {
 
 		return new CurrentAccountDto(account.getAccountHolder().getUserId(), account.getAccountHolder().getName(),
 				account.getAccountHolder().getPhoneNumber(), account.getAccountHolder().getEmail(),
-				account.getBranch().getIFSC(), account.getAccountNumber(), account.getStatus());
+				account.getBranch().getIFSC(), account.getAccountNumber(), account.getStatus(),
+				createDebitCardDto(account));
 	}
 
 	public CurrentAccount generateAccountNumber(User user, CurrentAccount account, Branch branch, String bankId) {
@@ -65,6 +67,18 @@ public class CurrentAccountutil {
 		account.setDebitCard(card);
 		account.setAccountHolder(user);
 		return account;
+	}
+
+	private DebitCardDto createDebitCardDto(Account account) {
+		if (account.getDebitCard() != null) {
+			String debitCardNumber = "X".repeat(account.getDebitCard().getCardNumber().length() - 4) + account
+					.getDebitCard().getCardNumber().substring(account.getDebitCard().getCardNumber().length() - 4);
+
+			return new DebitCardDto(debitCardNumber, account.getDebitCard().getStatus(),
+					account.getDebitCard().getExpiryDate(), account.getDebitCard().getIssueDate(),
+					account.getDebitCard().getValidUptoDate(), account.getDebitCard().getApproval());
+		}
+		return null;
 	}
 
 }

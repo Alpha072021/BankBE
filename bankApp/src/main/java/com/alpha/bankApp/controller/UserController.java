@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alpha.bankApp.dto.UserDto;
 import com.alpha.bankApp.entity.User;
 import com.alpha.bankApp.exception.VersionUnauthorizedException;
 import com.alpha.bankApp.service.UserService;
@@ -59,7 +60,7 @@ public class UserController {
 	}
 
 	@GetMapping("/getUserProfile")
-	public ResponseEntity<ResponseStructure<User>> getUserProfile(@PathVariable String version,
+	public ResponseEntity<ResponseStructure<UserDto>> getUserProfile(@PathVariable String version,
 			@RequestHeader("Authorization") String token) {
 		if (version.equalsIgnoreCase("v1"))
 			return service.getUserProfile(token);

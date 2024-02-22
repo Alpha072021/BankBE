@@ -28,5 +28,7 @@ public class AccountDto {
 	private LocalDate dateOfBirth;
 	private Address address;
 	private String panNumber;
+	private double accountBalance;
+	private DebitCardDto debitCardDto;
 
 }

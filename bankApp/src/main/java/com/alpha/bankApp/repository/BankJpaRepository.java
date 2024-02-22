@@ -25,4 +25,8 @@ public interface BankJpaRepository extends JpaRepository<Bank, String> {
 
 	@Query("SELECT b FROM Bank b WHERE b.managingDirector=null")
 	public List<Bank> getAllBanks();
+
+	@Query("SELECT b FROM Bank b WHERE EXISTS(SELECT br FROM b.branches br WHERE br.branchId = :branchId)")
+	public Bank findBankByBranchId(String branchId);
+
 }

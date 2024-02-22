@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alpha.bankApp.dto.BranchManagerDashBoardDto;
 import com.alpha.bankApp.dto.BranchManagerDto;
 import com.alpha.bankApp.entity.Employee;
 import com.alpha.bankApp.exception.VersionUnauthorizedException;
@@ -125,6 +126,14 @@ public class BranchManagerController {
 			@RequestHeader("Authorization") String token) {
 		if (version.equalsIgnoreCase("v1"))
 			return managerService.getBranchManagerProfile(token);
+		throw new VersionUnauthorizedException("Not An Authorized Version");
+	}
+
+	@GetMapping("/getBranchManagerDashBoard")
+	public ResponseEntity<ResponseStructure<BranchManagerDashBoardDto>> getBranchManagerDashBoard(
+			@PathVariable String version, @RequestParam String branchId) {
+		if (version.equals("v1"))
+			return managerService.getBranchManagerDashBoard(branchId);
 		throw new VersionUnauthorizedException("Not An Authorized Version");
 	}
 }

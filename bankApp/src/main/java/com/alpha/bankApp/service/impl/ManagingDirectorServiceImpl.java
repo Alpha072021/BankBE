@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.alpha.bankApp.dao.BankDao;
 import com.alpha.bankApp.dao.EmployeeDao;
 import com.alpha.bankApp.dao.ManagingDirectorDao;
+import com.alpha.bankApp.dto.ManagingDirectorDashBoardDto;
 import com.alpha.bankApp.dto.ManagingDirectorDto;
 import com.alpha.bankApp.entity.Bank;
 import com.alpha.bankApp.entity.Employee;
@@ -251,6 +252,17 @@ public class ManagingDirectorServiceImpl extends EmployeeServiceImpl implements 
 					"The position of Managing Director is currently vacant or unassigned within the employee");
 		}
 		throw new EmployeeNotFoundException("Employee With the Given Id " + managingDirectorId + " Not Found");
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<ManagingDirectorDashBoardDto>> getManagingDirectorDashBoard(
+			String managingDirectorId) {
+		ManagingDirectorDashBoardDto managingDirectorDashBoardDto = util.getDashBoard(managingDirectorId);
+		ResponseStructure<ManagingDirectorDashBoardDto> structure = new ResponseStructure<>();
+		structure.setData(managingDirectorDashBoardDto);
+		structure.setMessage("Found");
+		structure.setStatusCode(HttpStatus.OK.value());
+		return new ResponseEntity<ResponseStructure<ManagingDirectorDashBoardDto>>(structure, HttpStatus.OK);
 	}
 
 }

@@ -5,6 +5,7 @@ package com.alpha.bankApp.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 import org.hibernate.annotations.UpdateTimestamp;
@@ -24,6 +25,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 
@@ -329,4 +331,20 @@ public class Account implements Comparable<Account>, Serializable {
 	public void setStatement(Statement statement) {
 		this.statement = statement;
 	}
+
+	/*
+	 * Introducing the "Beneficiary" field with a many-to-many relationship to
+	 * efficiently store user beneficiary information.
+	 */
+	@ManyToMany
+	private List<Beneficiary> beneficiary;
+
+	public List<Beneficiary> getBeneficiary() {
+		return beneficiary;
+	}
+
+	public void setBeneficiary(List<Beneficiary> beneficiary) {
+		this.beneficiary = beneficiary;
+	}
+
 }

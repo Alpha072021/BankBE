@@ -105,4 +105,19 @@ public class BankDaoImpl implements BankDao {
 		throw new BranchNotFoundException("Branch Does Not Belongs to Any Bank");
 	}
 
+	@Override
+	public String findBankNameByBranchId(String branchId) {
+		String sql = "SELECT * FROM bank b JOIN bank_branches bb On b.bank_id = bb.bank_bank_id JOIN branch r on bb.branches_branch_id = r.branch_id WHERE r.branch_id='"
+				+ branchId + "';";
+
+		// Define a RowMapper to map the result set to the bankId
+		RowMapper<String> rowMapper = (resultSet, rowNum) -> resultSet.getString("bank_name");
+
+		List<String> result = springJdbc.query(sql, rowMapper);
+		if (result != null && !result.isEmpty()) {
+			return result.get(0);
+		}
+		throw new BranchNotFoundException("Branch Does Not Belongs to Any Bank");
+	}
+
 }

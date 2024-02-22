@@ -29,4 +29,6 @@ public interface BankDao {
 
 	String findBankIdByBranchId(String branchId);
 
+	String findBankNameByBranchId(String branchId);
+
 }

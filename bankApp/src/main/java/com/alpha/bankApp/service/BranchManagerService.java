@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 
+import com.alpha.bankApp.dto.BranchManagerDashBoardDto;
 import com.alpha.bankApp.dto.BranchManagerDto;
 import com.alpha.bankApp.entity.Employee;
 import com.alpha.bankApp.util.ResponseStructure;
@@ -38,6 +39,8 @@ public interface BranchManagerService extends EmployeeService {
 	ResponseEntity<ResponseStructure<String>> removeBranchManagerById(String branchManagerId);
 
 	ResponseEntity<ResponseStructure<BranchManagerDto>> getBranchManagerProfile(String token);
+
+	ResponseEntity<ResponseStructure<BranchManagerDashBoardDto>> getBranchManagerDashBoard(String branchManagerId);
 
 	/*
 	 * Further update

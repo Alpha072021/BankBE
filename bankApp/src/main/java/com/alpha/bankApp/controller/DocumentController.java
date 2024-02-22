@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,6 +42,23 @@ public class DocumentController {
 			@RequestParam List<DocumentType> types) {
 		if (version.equalsIgnoreCase("v1")) {
 			return service.saveDocument(id, files, types, users);
+		}
+		throw new VersionUnauthorizedException("Not An Authorized Version");
+	}
+
+	@PostMapping("/saveProfile")
+	public ResponseEntity<ResponseStructure<String>> saveProfile(@PathVariable String version,
+			@RequestParam("files") MultipartFile files, @RequestParam String employeeId, @RequestParam String users) {
+		if (version.equalsIgnoreCase("v1")) {
+			return service.saveProfile(employeeId, files, users);
+		}
+		throw new VersionUnauthorizedException("Not An Authorized Version");
+	}
+	@GetMapping("/findProfile")
+	public ResponseEntity<ResponseStructure<String>> findUserProfile(@PathVariable String version,
+			@RequestParam String id, @RequestParam String users) {
+		if (version.equalsIgnoreCase("v1")) {
+			return service.findUserProfile(id, users);
 		}
 		throw new VersionUnauthorizedException("Not An Authorized Version");
 	}

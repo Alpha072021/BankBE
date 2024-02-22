@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 
+import com.alpha.bankApp.dto.AccountApprovalDto;
 import com.alpha.bankApp.dto.AccountDto;
+import com.alpha.bankApp.dto.AccountStatusDto;
 import com.alpha.bankApp.util.ResponseStructure;
 
 public interface AccountService {
@@ -17,5 +19,9 @@ public interface AccountService {
 	ResponseEntity<ResponseStructure<AccountDto>> getAccountByAccountNumber(String accountNumber);
 
 	ResponseEntity<ResponseStructure<AccountDto>> updateAccount(AccountDto accountDto);
+
+	ResponseEntity<ResponseStructure<String>> updateDebitCardStatus(AccountStatusDto accountStatus);
+
+	ResponseEntity<ResponseStructure<String>> updateDebitCardApproval(AccountApprovalDto accountApproval);
 
 }

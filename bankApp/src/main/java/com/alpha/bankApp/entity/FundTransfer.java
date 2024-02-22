@@ -1,6 +1,6 @@
 package com.alpha.bankApp.entity;
 
-import com.alpha.bankApp.enums.FoundMessage;
+import com.alpha.bankApp.enums.FundMessage;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -22,5 +22,5 @@ public class FundTransfer extends Transaction {
 	private String receiverAccountNumber;
 	private double amount;
 	@Enumerated(EnumType.STRING)
-	private FoundMessage foundMessage;
+	private FundMessage fundMessage;
 }

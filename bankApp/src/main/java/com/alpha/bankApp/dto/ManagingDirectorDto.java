@@ -1,5 +1,7 @@
 package com.alpha.bankApp.dto;
 
+import org.springframework.stereotype.Component;
+
 import com.alpha.bankApp.entity.Address;
 import com.alpha.bankApp.enums.Role;
 
@@ -10,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Component
 public class ManagingDirectorDto {
 	private String managingDirectorId;
 	private String name;

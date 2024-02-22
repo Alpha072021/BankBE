@@ -4,6 +4,7 @@
 package com.alpha.bankApp.dao.impl;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +68,18 @@ public class BankAccountDaoImpl implements BankAccountDao {
 	@Override
 	public ArrayList<Long> getBankAccountIdByBankId(String bankId) {
 		return jpaRepository.getBankAccountIdByBankId(bankId);
+	}
+
+	/* Created for retrieving all bankAccounts to update the bankLedger. */
+	@Override
+	public List<BankAccount> findAllBankAccounts() {
+		return jpaRepository.findAll();
+	}
+
+	/* updating BankAccounts after successfully creating bankLedgers. */
+	@Override
+	public void updateBankAccount(List<BankAccount> modifiedBankAccounts) {
+		jpaRepository.saveAll(modifiedBankAccounts);
 	}
 
 }

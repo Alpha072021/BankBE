@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.alpha.bankApp.dao.EmployeeDao;
 import com.alpha.bankApp.entity.Employee;
+import com.alpha.bankApp.enums.DocumentType;
 import com.alpha.bankApp.enums.Role;
 import com.alpha.bankApp.repository.EmployeeJpaRepository;
 
@@ -108,6 +109,11 @@ public class EmployeeDaoImpl implements EmployeeDao {
 	// To Find the Employees Based on there role
 	public List<Employee> getEmployeeByRole(Role role) {
 		return repository.getEmployeeByRole(role);
+	}
+
+	@Override
+	public String findEmployeeProfileById(String id) {
+		return repository.findEmployeeProfileById(id, DocumentType.PROFILE);
 	}
 
 }

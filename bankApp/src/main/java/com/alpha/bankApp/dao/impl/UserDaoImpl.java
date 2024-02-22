@@ -10,6 +10,7 @@ import com.alpha.bankApp.dao.AccountDao;
 import com.alpha.bankApp.dao.UserDao;
 import com.alpha.bankApp.entity.Account;
 import com.alpha.bankApp.entity.User;
+import com.alpha.bankApp.enums.DocumentType;
 import com.alpha.bankApp.repository.UserJpaRepository;
 import com.alpha.bankApp.util.AccountUtil;
 
@@ -64,6 +65,11 @@ public class UserDaoImpl implements UserDao {
 	public List<User> findAllUserByBranchId(String branchId) {
 		List<Account> accounts = accountDao.findAllAccountByBranchId(branchId);
 		return accountUtil.getUsers(accounts);
+	}
+
+	@Override
+	public String findUserProfileById(String id) {
+		return repository.findUserProfileById(id, DocumentType.PROFILE);
 	}
 
 }

@@ -1,7 +1,5 @@
 package com.alpha.bankApp.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +18,7 @@ public class BankLegderController {
 	private BankLegderService bankLegderService;
 
 	@GetMapping
-	public ResponseEntity<ResponseStructure<List<BankLedger>>> getBankLegder(String version, String bankId) {
+	public ResponseEntity<ResponseStructure<BankLedger>> getBankLegder(String version, String bankId) {
 		if (version.equalsIgnoreCase("v1"))
 			return bankLegderService.getBankLegder(bankId);
 		throw new VersionUnauthorizedException("Not An Authorized Version");

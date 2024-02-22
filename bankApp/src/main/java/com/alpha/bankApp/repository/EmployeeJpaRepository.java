@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.alpha.bankApp.entity.Employee;
+import com.alpha.bankApp.enums.DocumentType;
 import com.alpha.bankApp.enums.Role;
 
 import jakarta.transaction.Transactional;
@@ -24,29 +25,27 @@ public interface EmployeeJpaRepository extends JpaRepository<Employee, String> {
 	@Query("select e from Employee e where e.email = ?1  and e.password = ?2")
 	Employee findByEmailAndPwd(String email, String password);
 
-	@Modifying(clearAutomatically = true )
+	@Modifying(clearAutomatically = true)
 	@Transactional
 	@Query("update Employee e set e.password = :newPassword where e.employeeId = :employeeId and e.password = :oldPassword ")
-	void changePassword(@Param(value="employeeId") String employeeId,@Param(value="oldPassword") String oldPassword, @Param(value="newPassword") String newPassword);
+	void changePassword(@Param(value = "employeeId") String employeeId,
+			@Param(value = "oldPassword") String oldPassword, @Param(value = "newPassword") String newPassword);
 
-	@Modifying(clearAutomatically = true )
+	@Modifying(clearAutomatically = true)
 	@Transactional
 	@Query("update Employee e set e.name = :name where e.employeeId = :employeeId ")
-	int changeName(@Param(value = "employeeId") String employeeId ,@Param(value = "name") String name ) ;
-	
-	
+	int changeName(@Param(value = "employeeId") String employeeId, @Param(value = "name") String name);
+
 	/**
 	 * @param employeeId
 	 * @param role
 	 * @return
 	 */
-	@Modifying(clearAutomatically = true )
+	@Modifying(clearAutomatically = true)
 	@Transactional
 	@Query("update Employee e set e.role=:role where e.employeeId = :employeeId")
-	int changeRole(@Param(value="employeeId") String employeeId,@Param(value="role") Role role);
+	int changeRole(@Param(value = "employeeId") String employeeId, @Param(value = "role") Role role);
 
-	
-	
 	Employee findByEmail(String email);
 
 	Employee findByName(String name);
@@ -55,5 +54,8 @@ public interface EmployeeJpaRepository extends JpaRepository<Employee, String> {
 	@Query("delete from Employee e where e.employeeId = ?1")
 	void deleteById(String employeeId);
 
-	List<Employee> getEmployeeByRole(Role role);	
+	List<Employee> getEmployeeByRole(Role role);
+
+	@Query("SELECT p.documentImagePath FROM Employee e JOIN e.docsContainer d JOIN d.documents p WHERE e.employeeId=?1 AND p.type=?2")
+	String findEmployeeProfileById(String id, DocumentType documentType);
 }

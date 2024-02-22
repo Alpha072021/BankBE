@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 
+import com.alpha.bankApp.dto.ManagingDirectorDashBoardDto;
 import com.alpha.bankApp.dto.ManagingDirectorDto;
 import com.alpha.bankApp.entity.Bank;
 import com.alpha.bankApp.entity.Employee;
@@ -34,5 +35,8 @@ public interface ManagingDirectorService extends EmployeeService {
 	ResponseEntity<ResponseStructure<ManagingDirectorDto>> getMD(String token);
 
 	ResponseEntity<ResponseStructure<Employee>> getManagingDirectorById(String managingDirectorId);
+
+	ResponseEntity<ResponseStructure<ManagingDirectorDashBoardDto>> getManagingDirectorDashBoard(
+			String managingDirectorId);
 
 }

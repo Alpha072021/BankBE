@@ -35,7 +35,11 @@ public class BankAccount {
 	private double cashOutFlow;
 	@OneToOne(cascade = CascadeType.ALL)
 	private Bank bank;
-	@OneToMany(mappedBy = "bankAccount", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	/*
+	 * modifying the fetch type from LAZY to EAGER in order to dynamically generate
+	 * the bankLedger.
+	 */
+	@OneToMany(mappedBy = "bankAccount", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private List<BankLedger> bankLegder;
 
 }

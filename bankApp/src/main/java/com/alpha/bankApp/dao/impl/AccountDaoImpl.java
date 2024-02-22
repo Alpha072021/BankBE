@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 
 import com.alpha.bankApp.dao.AccountDao;
 import com.alpha.bankApp.entity.Account;
+import com.alpha.bankApp.entity.Beneficiary;
+import com.alpha.bankApp.entity.Statement;
 import com.alpha.bankApp.enums.Status;
 import com.alpha.bankApp.repository.AccountJpaRepository;
 
@@ -83,6 +85,21 @@ public class AccountDaoImpl implements AccountDao {
 	public List<Account> getAllAccounts(String branchId) {
 
 		return accountRepository.findAllByBranchId(branchId);
+	}
+
+	/*
+	 * Introducing "findAllBeneficiaryByAccountNumber" to retrieve all beneficiaries
+	 * associated with a specific account number.
+	 */
+	@Override
+	public List<Beneficiary> findAllBeneficiaryByAccountNumber(String accountNumber) {
+
+		return accountRepository.findAllBeneficiaryByAccountNumber(accountNumber);
+	}
+
+	@Override
+	public Statement findStatementByAccountId(String accountNumber) {
+		return accountRepository.findStatementByAccountId(accountNumber);
 	}
 
 }

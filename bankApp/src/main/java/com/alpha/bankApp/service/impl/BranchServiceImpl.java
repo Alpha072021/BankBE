@@ -9,9 +9,12 @@ import org.springframework.stereotype.Service;
 
 import com.alpha.bankApp.dao.BankDao;
 import com.alpha.bankApp.dao.BranchDao;
+import com.alpha.bankApp.dao.BranchManagerDao;
 import com.alpha.bankApp.dto.BranchDto;
 import com.alpha.bankApp.entity.Bank;
 import com.alpha.bankApp.entity.Branch;
+import com.alpha.bankApp.entity.Employee;
+import com.alpha.bankApp.enums.Role;
 import com.alpha.bankApp.exception.BankNotAssignedBranchException;
 import com.alpha.bankApp.exception.BankNotFoundException;
 import com.alpha.bankApp.exception.BranchNotFoundException;
@@ -27,6 +30,8 @@ public class BranchServiceImpl implements BranchService {
 	private BankDao bankDao;
 	@Autowired
 	private BranchUtil util;
+	@Autowired
+	private BranchManagerDao branchManagerDao;
 
 	@Override
 	public ResponseEntity<ResponseStructure<Branch>> createBranch(String bankId, Branch branch) {
@@ -43,7 +48,11 @@ public class BranchServiceImpl implements BranchService {
 
 	@Override
 	public ResponseEntity<ResponseStructure<Branch>> updateBranch(String branchId, Branch branch) {
+		Employee employee = branchManagerDao.getBranchManager(branchId);
 		branch = branchDao.updateBranch(branchId, branch);
+		if (employee != null && employee.getRole().equals(Role.BRANCH_MANAGER)) {
+			branch.setBranchManager(employee);
+		}
 		if (branch != null) {
 			ResponseStructure<Branch> responseStructure = new ResponseStructure<>();
 			responseStructure.setData(branch);

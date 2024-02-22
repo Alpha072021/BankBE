@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alpha.bankApp.dto.ManagingDirectorDashBoardDto;
 import com.alpha.bankApp.dto.ManagingDirectorDto;
 import com.alpha.bankApp.entity.Bank;
 import com.alpha.bankApp.entity.Employee;
@@ -125,6 +126,14 @@ public class ManagingDirectorController {
 			@RequestParam String managingDirectorId) {
 		if (version.equalsIgnoreCase("v1"))
 			return directorService.getManagingDirectorById(managingDirectorId);
+		throw new VersionUnauthorizedException("Not An Authorized Version");
+	}
+
+	@GetMapping("/getManagingDirectorDashBoard")
+	public ResponseEntity<ResponseStructure<ManagingDirectorDashBoardDto>> getManagingDirectorDashBoard(
+			@PathVariable String version, @RequestParam String managingDirectorId) {
+		if (version.equals("v1"))
+			return directorService.getManagingDirectorDashBoard(managingDirectorId);
 		throw new VersionUnauthorizedException("Not An Authorized Version");
 	}
 }

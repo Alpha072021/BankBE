@@ -9,9 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.alpha.bankApp.dto.BranchDto;
+import com.alpha.bankApp.dto.BranchManagerDashBoardDto;
+import com.alpha.bankApp.entity.Account;
 import com.alpha.bankApp.entity.Bank;
 import com.alpha.bankApp.entity.Branch;
 import com.alpha.bankApp.entity.idgenerator.AddressIdGenerator;
+import com.alpha.bankApp.enums.AccountType;
 import com.alpha.bankApp.repository.BranchJpaRepository;
 
 @Component
@@ -85,5 +88,24 @@ public class BranchUtil {
 			branchDtos.add(getBranchDto(branch));
 		}
 		return branchDtos;
+	}
+
+	public BranchManagerDashBoardDto generateBranchManagerDashBoard(Branch branch) {
+		BranchManagerDashBoardDto branchManagerDashBoard = new BranchManagerDashBoardDto();
+		long totalSavingAccount = getCountOfSavingAccount(branch.getAccounts());
+		branchManagerDashBoard.setTotalSavingAccountNumber(totalSavingAccount);
+		branchManagerDashBoard.setTotalCurrentAccount(branch.getAccounts().size() - totalSavingAccount);
+		branchManagerDashBoard.setTotalCreditCardAccount(0);
+		branchManagerDashBoard.setTotalDeposits(totalSavingAccount);
+		branchManagerDashBoard.setRevenues(null);
+		branchManagerDashBoard.setTotalFundTransfer(0);
+		branchManagerDashBoard.setTotalDeposits(0);
+		return branchManagerDashBoard;
+	}
+
+	private long getCountOfSavingAccount(List<Account> accounts) {
+
+		return accounts.stream().filter(account -> account.getAccountType().equals(AccountType.SAVINGS_ACCOUNT))
+				.count();
 	}
 }

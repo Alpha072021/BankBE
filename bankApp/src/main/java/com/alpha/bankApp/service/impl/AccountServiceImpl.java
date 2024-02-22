@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 
 import com.alpha.bankApp.dao.AccountDao;
 import com.alpha.bankApp.dao.BankDao;
+import com.alpha.bankApp.dto.AccountApprovalDto;
 import com.alpha.bankApp.dto.AccountDto;
+import com.alpha.bankApp.dto.AccountStatusDto;
 import com.alpha.bankApp.entity.Account;
 import com.alpha.bankApp.entity.Bank;
 import com.alpha.bankApp.entity.Branch;
@@ -18,6 +20,7 @@ import com.alpha.bankApp.exception.BankNotAssignedBranchException;
 import com.alpha.bankApp.exception.BankNotFoundException;
 import com.alpha.bankApp.exception.BranchNotAssignedException;
 import com.alpha.bankApp.exception.CustomersNotHaveAccount;
+import com.alpha.bankApp.exception.DebitCardNotFound;
 import com.alpha.bankApp.service.AccountService;
 import com.alpha.bankApp.util.AccountUtil;
 import com.alpha.bankApp.util.ResponseStructure;
@@ -104,6 +107,44 @@ public class AccountServiceImpl implements AccountService {
 		structure.setMessage("Modified");
 		structure.setStatusCode(HttpStatus.OK.value());
 		return new ResponseEntity<ResponseStructure<AccountDto>>(structure, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<String>> updateDebitCardStatus(AccountStatusDto accountStatus) {
+		Account account = accountDao.getAccountByAccountNumber(accountStatus.getAccountNumber());
+		if (account != null) {
+			if (account.getDebitCard() != null) {
+				account.getDebitCard().setStatus(accountStatus.getStatus());
+				accountDao.updateAccount(account.getAccountNumber(), account);
+				ResponseStructure<String> structure = new ResponseStructure<>();
+				structure.setData("Card Status Modified");
+				structure.setMessage("Modified");
+				structure.setStatusCode(HttpStatus.OK.value());
+				return new ResponseEntity<ResponseStructure<String>>(structure, HttpStatus.OK);
+			}
+			throw new DebitCardNotFound("Account Not Have DebitCard ");
+		}
+		throw new CustomersNotHaveAccount(
+				"Account With the Given Account-Number " + accountStatus.getAccountNumber() + " Not Found");
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<String>> updateDebitCardApproval(AccountApprovalDto accountApproval) {
+		Account account = accountDao.getAccountByAccountNumber(accountApproval.getAccountNumber());
+		if (account != null) {
+			if (account.getDebitCard() != null) {
+				account.getDebitCard().setApproval(accountApproval.getApproval());
+				accountDao.updateAccount(account.getAccountNumber(), account);
+				ResponseStructure<String> structure = new ResponseStructure<>();
+				structure.setData("Card Approval Modified");
+				structure.setMessage("Modified");
+				structure.setStatusCode(HttpStatus.OK.value());
+				return new ResponseEntity<ResponseStructure<String>>(structure, HttpStatus.OK);
+			}
+			throw new DebitCardNotFound("Account Not Have DebitCard ");
+		}
+		throw new CustomersNotHaveAccount(
+				"Account With the Given Account-Number " + accountApproval.getAccountNumber() + " Not Found");
 	}
 
 }

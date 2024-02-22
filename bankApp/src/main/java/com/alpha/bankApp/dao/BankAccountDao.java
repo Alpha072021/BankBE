@@ -4,6 +4,7 @@
 package com.alpha.bankApp.dao;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import com.alpha.bankApp.entity.BankAccount;
@@ -26,5 +27,10 @@ public interface BankAccountDao {
 
 	public ArrayList<Long> getBankAccountIdByBankId(String bankId);
 
+	/* created for retrieving all bankAccounts to update the bankLedger. */
+	List<BankAccount> findAllBankAccounts();
+
+	/* updating BankAccounts after successfully creating bankLedgers. */
+	void updateBankAccount(List<BankAccount> modifiedBankAccounts);
 
 }
